@@ -10,9 +10,9 @@ HTTPClient httpClient;
 //重启标志位
 int i = 1;
 
-//土壤传感器问询帧
-int item1[8] = {0x02,0x03,0x01,0xf4,0x00,0x08,0x04,0x31};
 //空气传感器问询帧
+int item1[8] = {0x02,0x03,0x01,0xf4,0x00,0x08,0x04,0x31};
+//土壤传感器问询帧
 int item2[8] = {0x01,0x03,0x00,0x00,0x00,0x02,0xC4,0x0B};
 
 //获取空气温度监测值
@@ -261,11 +261,11 @@ void loop() {
     }else
         digitalWrite(2,0);
 
-    //土壤测试
+    //空气测试
     delay(500);  // 放慢输出频率
 
     for (int i = 0 ; i < 8; i++) {  // 发送
-        Serial2.write(item2[i]);
+        Serial2.write(item1[i]);
     }
 
     delay(500);  // 等待应答帧返回
@@ -279,11 +279,11 @@ void loop() {
 
     delay(1000);
 
-    //空气测试
+    //土壤测试
     delay(500);  // 放慢输出频率
 
     for (int i = 0 ; i < 8; i++) {  // 发送
-        Serial2.write(item1[i]);
+        Serial2.write(item2[i]);
     }
 
     delay(500);  // 等待应答帧返回
