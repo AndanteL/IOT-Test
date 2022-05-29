@@ -223,12 +223,8 @@ void getlocalJson(double tem,double hem,double lux,double soiltem,double soilhem
     httpClient.end();
 }
 
-void setup() {
-    //串口使能
-    Serial.begin(9600);
-    Serial2.begin(9600);
-    while (!Serial);
-    pinMode(2,OUTPUT);
+void SmartConfig()
+{
     //初始化Wifi模块为station模式，运行SmartConfig
     WiFi.mode(WIFI_AP_STA);
     WiFi.beginSmartConfig();
@@ -254,6 +250,46 @@ void setup() {
 
     Serial.print("IP Address: ");
     Serial.println(WiFi.localIP());
+}
+
+
+bool AutoConfig()
+{
+    WiFi.begin();
+    int wstatus = WiFi.status();
+    if (wstatus == WL_CONNECTED)
+    {
+        Serial.println("WIFI SmartConfig Success");
+        Serial.printf("SSID:%s", WiFi.SSID().c_str());
+        Serial.printf(", PSW:%s\r\n", WiFi.psk().c_str());
+        Serial.print("LocalIP:");
+        Serial.print(WiFi.localIP());
+        Serial.print(" ,GateIP:");
+        Serial.println(WiFi.gatewayIP());
+        return true;
+    }
+    else
+    {
+        Serial.print("WIFI AutoConfig Waiting......");
+        Serial.println(wstatus);
+        delay(1000);
+    }
+    Serial.println("WIFI AutoConfig Faild!" );
+    return false;
+}
+
+
+void setup() {
+    //串口使能
+    Serial.begin(9600);
+    Serial2.begin(9600);
+    while (!Serial);
+    pinMode(2,OUTPUT);
+    //初始化Wifi模块为station模式，运行SmartConfig
+    if (!AutoConfig())
+    {
+        SmartConfig();
+    }
 }
 
 void loop() {
@@ -322,9 +358,9 @@ void loop() {
 
     //获取并发送json包
     //getremoteJson(tem,hem,lux,soiltem,soilhem);
-    //getlocalJson(tem,hem,lux,soiltem,soilhem);
+    getlocalJson(tem,hem,lux,soiltem,soilhem);
     //getnwJson(tem,hem,lux,soiltem,soilhem);
-    getJson(tem,hem,lux,soiltem,soilhem);
+    //getJson(tem,hem,lux,soiltem,soilhem);
 
     //定时重启
     i++;
