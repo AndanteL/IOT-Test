@@ -270,11 +270,10 @@ bool AutoConfig()
     }
     else
     {
-        Serial.print("WIFI AutoConfig Waiting......");
+        Serial.print("WIFI AutoConfig Faild!");
         Serial.println(wstatus);
         delay(1000);
     }
-    Serial.println("WIFI AutoConfig Faild!" );
     return false;
 }
 
