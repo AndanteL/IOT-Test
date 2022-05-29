@@ -1,4 +1,4 @@
-# IOT-Test# IOT-Test
+# IOT-Test
 
 ### 物联网工程设计课设项目
 
