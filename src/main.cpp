@@ -3,8 +3,6 @@
 #include "cJSON.h"
 #include <HTTPClient.h>
 
-const char *ssid = "Andante"; //网络名称
-const char *password = "Ll10211019"; //网络密码
 HTTPClient httpClient;
 
 //重启标志位
@@ -231,16 +229,31 @@ void setup() {
     Serial2.begin(9600);
     while (!Serial);
     pinMode(2,OUTPUT);
-    WiFi.mode(WIFI_STA);
-    WiFi.setSleep(false); //关闭STA模式下wifi休眠，提高响应速度
-    WiFi.begin(ssid, password); //连接网络
-    while (WiFi.status() != WL_CONNECTED) //等待网络连接成功
-    {
+    //初始化Wifi模块为station模式，运行SmartConfig
+    WiFi.mode(WIFI_AP_STA);
+    WiFi.beginSmartConfig();
+
+    //等待来自手机的SmartConfig数据包
+    Serial.println("Waiting for SmartConfig.");
+    while (!WiFi.smartConfigDone()) {
         delay(500);
         Serial.print(".");
     }
-    Serial.println("WiFi connected, IP address: ");
-    Serial.println(WiFi.localIP()); //打印模块IP
+
+    Serial.println("");
+    Serial.println("SmartConfig received.");
+
+    //等待wifi连接至AP
+    Serial.println("Waiting for WiFi");
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println("WiFi Connected.");
+
+    Serial.print("IP Address: ");
+    Serial.println(WiFi.localIP());
 }
 
 void loop() {
