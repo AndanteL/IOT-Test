@@ -285,7 +285,6 @@ void setup() {
     Serial.begin(9600);
     Serial2.begin(9600);
     while (!Serial);
-    pinMode(2,OUTPUT);
     //初始化Wifi模块为station模式，运行SmartConfig
     if (!AutoConfig())
     {
@@ -304,12 +303,6 @@ void loop() {
     //接收应答帧
     String data1 = "";
     String data2 = "";
-
-    //显示是否连接上WiFi
-    if(WiFi.isConnected()){
-        digitalWrite(2,1);
-    }else
-        digitalWrite(2,0);
 
     //空气测试
     delay(500);  // 放慢输出频率
