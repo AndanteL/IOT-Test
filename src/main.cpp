@@ -131,37 +131,6 @@ void getJson(double tem,double hem,double lux,double soiltem,double soilhem){
     cJSON_Delete(pRoot);                                       // 释放cJSON_CreateObject ()分配出来的内存空间
 }
 
-//获取Json数据包发送至17gz8
-void getnwJson(double tem,double hem,double lux,double soiltem,double soilhem){
-    httpClient.begin("https://api.17gz8.com/server/Device/v1/api/upload-data");
-    cJSON *pRoot = cJSON_CreateObject();                         // 创建JSON根部结构体
-    cJSON_AddStringToObject(pRoot,"id","6270b7a5a5ef31166d0bc89b");    // 添加字符串类型数据到根部结构体
-    cJSON_AddNumberToObject(pRoot,"A_temperature",tem);                   // 添加整型数据到根部结构体
-    cJSON_AddNumberToObject(pRoot,"A_humidity",hem);
-    cJSON_AddNumberToObject(pRoot,"L_intensity",lux);
-    cJSON_AddNumberToObject(pRoot,"S_temperature",soiltem);
-    cJSON_AddNumberToObject(pRoot,"S_humidity",soilhem);
-    cJSON_AddStringToObject(pRoot,"information","lmh-fy");
-
-    char *sendData = cJSON_Print(pRoot);                        // 从cJSON对象中获取有格式的JSON对象
-    httpClient.addHeader("Content-Type","application/json");
-    int httpCode = httpClient.POST(sendData); // 发起POST请求
-    if (httpCode > 0) // 如果状态码大于0说明请求过程无异常
-    {
-        Serial.println(httpCode);
-        if (httpCode == HTTP_CODE_OK) // 请求被服务器正常响应，等同于httpCode == 200
-        {
-            Serial.println("remote-successful");
-        }else{
-            Serial.println("error");
-        }
-    }
-    Serial.println(sendData);
-    cJSON_free((void *) sendData);                             // 释放cJSON_Print ()分配出来的内存空间
-    cJSON_Delete(pRoot);                                       // 释放cJSON_CreateObject ()分配出来的内存空间
-    httpClient.end();
-}
-
 //获取Json数据包发送至云端web
 void getremoteJson(double tem,double hem,double lux,double soiltem,double soilhem){
     httpClient.begin("http://124.221.111.98/receiveAPI.php");
